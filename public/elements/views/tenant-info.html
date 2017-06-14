@@ -1,20 +1,19 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/px-card/px-card.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../../bower_components/px-data-table/px-data-table.html" />
+<link rel="import" href="../../bower_components/px-data-table/px-data-table.html">
 
-<dom-module id="simple-asset-view">
+<dom-module id="tenant-info">
   <template>
 
-    <px-card header-text="Asset Details" icon="fa-sitemap">
-      <h3>{{assetDescription}}</h3>
-      <px-data-table table-data="{{assetTableData}}">
-      </px-data-table>
+    <!-- <px-card header-text="Tenant Display" icon="fa-sitemap"> -->
+      <h2><center>Display your tenant info here. </center></h2>
+
       <!-- Choose one of these iron-ajax elements to load data from the source of your choice. -->
 
       <!-- First option loads sample data from a json file in the server/sample-data directory. -->
       <!-- mock-asset-service -->
-      <iron-ajax url="/mock-api/predix-asset/asset?filter=group=/group/plant-richmond-refinery" id="assetQueryElement" last-response="{{rawAssetData}}" auto></iron-ajax>
+      <!-- <iron-ajax url="/mock-api/predix-asset/asset?filter=group=/group/plant-richmond-refinery" id="assetQueryElement" last-response="{{rawAssetData}}" auto></iron-ajax> -->
       <!-- end mock-asset-service -->
 
       <!-- Second option loads compressor data from Predix Time Series directly.
@@ -27,11 +26,11 @@
             You can use this option if you inserted jet engine data using the Predix Toolkit -->
       <!-- <iron-ajax url="/predix-api/predix-asset/engine" id="assetQueryElement" last-response="{{rawAssetData}}" auto></iron-ajax> -->
 
-    </px-card>
+    <!-- </px-card> -->
   </template>
   <script>
     Polymer({
-      is: 'simple-asset-view',
+      is: 'tenant-info',
       properties: {
         tsChartData: {
           type: Array

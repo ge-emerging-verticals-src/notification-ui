@@ -83,12 +83,12 @@
           <!-- /simple-asset route and view -->
           <app-route
             route="[[_route]]"
-            pattern="/simple-asset"
-            active="{{_simple-assetActive}}">
+            pattern="/tenant"
+            active="{{_tenantinfoActive}}">
           </app-route>
           <px-view
-            active="[[_simple-assetActive]]"
-            element-href="/elements/views/simple-asset-view.html">
+            active="[[_tenantinfoActive]]"
+            element-href="/elements/views/tenant-info.html">
          </px-view>
 
         </main>
@@ -120,7 +120,7 @@
           value: function() {
             return {
               version: '1.0',
-              name: 'Predix UI Seed - RMD Reference App'
+              name: 'Email Notification Dashboard'
             }
           }
         },
@@ -141,14 +141,14 @@
                 "path": "/about",
                 "icon": "fa-info-circle"
               }
-              //Uncomment this block to show the Simple Asset navigation item on the menu.
-              /* // asset-nav-item
+
+               // tenant info page
               ,{
-                "label": "Simple Asset",
-                "path": "/simple-asset",
+                "label": "Tenant Info",
+                "path": "/tenant",
                 "icon": "fa-sitemap"
               }
-              // end asset-nav-item */
+              // end tenant info
             ]
           }
         },
