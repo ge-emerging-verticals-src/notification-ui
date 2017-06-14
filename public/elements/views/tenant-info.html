@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/px-card/px-card.html">
+<link rel="import" href="../../bower_components/px-data=table/px-data-table.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/px-data-table/px-data-table.html">
 
@@ -7,7 +8,11 @@
   <template>
 
     <!-- <px-card header-text="Tenant Display" icon="fa-sitemap"> -->
-      <h2><center>Display your tenant info here. </center></h2>
+    <px-card header-text="Tenant Display"><p></p>
+    <px-data-table striped hide-pagination-control="true" table-data='[{"field":"id","data":"1"},{"field":"bindingId","data":"60ff625e-a6b8-4b27-9f06-c11641c4012b"},{"field":"uuid","data":"77e36836-cf4d-49a7-81fb-3a5311a454ff"},{"field":"planId","data":"a64b1064-f14f-4c06-8342-93996c3ac1a1"},{"field":"timestamp","data":"1491854770254"},{"field":"trustedIssuers","data":"https://6ba32cf8-bd8b-4420-b271-d3097bbee2cd.predix-uaa.run.aws-usw02-pr.ice.predix.io/oauth/token"},{"field":"dailyLimit","data":"10000"},{"field":"monthlyLimit", "data":"2000000"}, {"field":"successWebhook","data":"https://notification-webhook.run.aws-usw02-pr.ice.predix.io/success"},{"field":"failWebhook","data":"https://notification-webhook.run.aws-usw02-pr.ice.predix.io/fail"}]' table-rows="true" include-all-columns="true">
+
+      </px-data-table>
+      </px-card>
 
       <!-- Choose one of these iron-ajax elements to load data from the source of your choice. -->
 
