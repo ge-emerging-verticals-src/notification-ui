@@ -91,6 +91,16 @@
             element-href="/elements/views/tenant-info.html">
          </px-view>
 
+         <app-route
+           route="[[_route]]"
+           pattern="/events"
+           active="{{_eventinfoActive}}">
+         </app-route>
+         <px-view
+           active="[[_eventinfoActive]]"
+           element-href="/elements/views/events.html">
+        </px-view>
+
         </main>
 
       </div>
@@ -149,6 +159,13 @@
                 "icon": "fa-sitemap"
               }
               // end tenant info
+
+              // event info page
+              ,{
+                "label": "Event Info",
+                "path": "/events",
+                "icon": "fa-sitemap"
+              }
             ]
           }
         },

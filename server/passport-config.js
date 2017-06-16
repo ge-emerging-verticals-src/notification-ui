@@ -27,7 +27,7 @@ function configurePassportStrategy(predixConfig) {
 	//   have a database of user records, the complete CloudFoundry profile is
 	//   serialized and deserialized.
 	passport.serializeUser(function(user, done) {
-		console.log("From USER-->"+JSON.stringify(user));
+		//console.log("From USER-->"+JSON.stringify(user));
 		done(null, user);
 	});
 	passport.deserializeUser(function(obj, done) {
@@ -41,9 +41,8 @@ function configurePassportStrategy(predixConfig) {
 		authorizationURL: predixConfig.uaaURL,
 		tokenURL: predixConfig.tokenURL
 	},refreshStrategy.getOAuth2StrategyCallback(//Create a callback for OAuth2Strategy
-	//TODO: implement if needed.
 	function(accessToken, refreshToken, profile, done) {
-    console.log("passport token ====>", accessToken);
+    //console.log("passport token ====>", accessToken);
 		token = accessToken;
 		done(null, profile);
 	}));
