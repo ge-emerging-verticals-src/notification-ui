@@ -20,6 +20,7 @@ module.exports = function(gulp) {
       'public/bower_components/px-typography-design',
       'public/bower_components/px-polymer-font-awesome',
       'public/bower_components/px-data-table',
+      'public/bower_components/format-notification-response',
 
       'public/elements/dev-guide'
     ];

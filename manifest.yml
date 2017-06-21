@@ -7,7 +7,7 @@ applications:
     command: node server/app.js
     path: dist
 services:
-    uaa-stupp
+  - uaa-stupp
  # - your-name-time-series
  # - your-name-asset
 env:
