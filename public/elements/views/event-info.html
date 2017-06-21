@@ -1,14 +1,14 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/px-card/px-card.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-<!-- <link rel="import" href="../../bower_components/px-data-table/px-data-table.html"> -->
+
 <link rel="import" href="../../bower_components/event-inbox/event-inbox.html">
 
 <dom-module id="event-info">
   <template>
       <px-card header-text="Event Display"><p></p>
-    <event-inbox></event-inbox>
-  </px-card>
+        <event-inbox></event-inbox>
+      </px-card>
 
       <!-- Choose one of these iron-ajax elements to load data from the source of your choice. -->
 
@@ -29,5 +29,11 @@
 
     <!-- </px-card> -->
   </template>
-
+  <script>
+    Polymer({
+      is: 'event-info',
+      properties: {
+      }
+    });
+  </script>
 </dom-module>
