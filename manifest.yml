@@ -1,21 +1,21 @@
 ---
 applications:
-  - name: predix-webapp-starter
+  - name: email-notification-ui
     memory: 128M
     timeout: 180
     buildpack: nodejs_buildpack
     command: node server/app.js
     path: dist
-#services:
- # - your-name-uaa
+services:
+    uaa-stupp
  # - your-name-time-series
  # - your-name-asset
 env:
     node_env: cloud
     uaa_service_label : predix-uaa
-    # Add these values for authentication in the cloud
-    #base64ClientCredential: dWFhLWNsaWVudC1pZDp1YWEtY2xpZW50LWlkLXNlY3JldA==
-    #loginBase64ClientCredential: bG9naW5fY2xpZW50X2lkOnNlY3JldA==
+    #Add these values for authentication in the cloud
+    base64ClientCredential: Y2xpZW50MTpjbGllbnQuc2VjcmV0
+    loginBase64ClientCredential: Y2xpZW50MjpjbGllbnQuc2VjcmV0
     # Use a full wss:// URL for actual web socket server. use /livestream for mock data.
     websocketServerURL: /livestream
     #rmdDatasourceURL: {URL of your RMD datasource microservice}
