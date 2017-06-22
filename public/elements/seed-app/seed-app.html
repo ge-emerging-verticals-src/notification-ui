@@ -34,7 +34,10 @@
           <!--[[appHeader]] -->
         </h3>
         <div>
-          <px-login style="margin-left: auto;"></px-login>
+          <!-- <px-login>
+</px-login> -->
+          <!-- <px-login style="margin-left: auto;"></px-login> -->
+          <!-- <px-login style="margin-left: auto;" user-name="User" login-url="/login" logout-url="/logout" language="en" popover-location="left" menu-items='[{"url":"#settings","label":"Settings"},{"url":"#account","label":"My Account"}]'></px-login> -->
         </div>
       </div>
     </header>
@@ -154,7 +157,7 @@
 
                // tenant info page
               ,{
-                "label": "Tenant Info",
+                "label": "Tenant Display",
                 "path": "/tenant",
                 "icon": "fa-sitemap"
               }
@@ -162,8 +165,13 @@
 
               // event info page
               ,{
-                "label": "Event Info",
+                "label": "Event Display",
                 "path": "/events",
+                "icon": "fa-sitemap"
+              },
+              {
+                "label": "Logout",
+                "path": "/logout",
                 "icon": "fa-sitemap"
               }
             ]
