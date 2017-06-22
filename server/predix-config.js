@@ -33,6 +33,7 @@ if(node_env === 'development') {
 	var uaaService = vcapsServices[process.env.uaa_service_label];
 	var assetService = vcapsServices['predix-asset'];
 	var timeseriesService = vcapsServices['predix-timeseries'];
+	var notificationService = vcapsServices['notification'];
 
 	if(uaaService) {
     	settings.uaaURL = uaaService[0].credentials.uri;
@@ -45,6 +46,11 @@ if(node_env === 'development') {
 	if(timeseriesService) {
 		settings.timeseriesZoneId = timeseriesService[0].credentials.query['zone-http-header-value'];
 		settings.timeseriesURL = timeseriesService[0].credentials.query.uri;
+	}
+	if(notificationService) {
+		// settings.notificationURL = "https://ev-notification-service-cf3.run.aws-usw02-dev.ice.predix.io";
+		settings.notificationURL = notificationService[0].credentials.catalogUri;
+		settings.notificationZoneId = null;
 	}
 
 	// read VCAP_APPLICATION
@@ -91,6 +97,16 @@ settings.buildVcapObjectFromLocalConfig = function(config) {
 			}
 		}];
 	}
+	if (config.notificationURL) {
+		vcapObj['notification'] = [{
+			credentials: {
+				url: config.notificationURL,
+				zone: {
+					'zone-id': null
+				}
+			}
+		}];
+	}
 	return vcapObj;
 };
 
@@ -115,6 +131,10 @@ settings.isTimeSeriesConfigured = function() {
 	settings.timeseriesURL.indexOf('https') === 0 &&
 	settings.timeseriesZoneId &&
 	settings.timeseriesZoneId.indexOf('{') !== 0;
+}
+
+settings.isNotificationConfigured = function() {
+	return settings.notificationURL && settings.notificationURL.indexOf('https') === 0;
 }
 
 function getValueFromEncodedString(encoded, index) {

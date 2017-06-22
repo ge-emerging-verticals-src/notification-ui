@@ -129,11 +129,11 @@ if (!config.isUaaConfigured()) {
   //   );
   // }
 
-  if (config.rmdDatasourceURL && config.rmdDatasourceURL.indexOf('https') === 0) {
-    app.get('/api/datagrid/*',
-        proxy.addClientTokenMiddleware,
-        proxy.customProxyMiddleware('/api/datagrid', config.rmdDatasourceURL, '/services/experience/datasource/datagrid'));
-  }
+  // if (config.rmdDatasourceURL && config.rmdDatasourceURL.indexOf('https') === 0) {
+  //   app.get('/api/datagrid/*',
+  //       proxy.addClientTokenMiddleware,
+  //       proxy.customProxyMiddleware('/api/datagrid', config.rmdDatasourceURL, '/services/experience/datasource/datagrid'));
+  // }
 
   //Use this route to make the entire app secure.  This forces login for any path in the entire app.
   app.use('/', passport.authenticate('main', {
@@ -160,15 +160,15 @@ if (!config.isUaaConfigured()) {
 // // NOTE: these routes are added after the real API routes.
 // //  So, if you have configured asset, the real asset API will be used, not the mock API.
 // // Import route modules
-var mockAssetRoutes = require('./routes/mock-asset.js')();
-var mockTimeSeriesRouter = require('./routes/mock-time-series.js');
-var mockRmdDatasourceRoutes = require('./routes/mock-rmd-datasource.js')();
-// add mock API routes.  (Remove these before deploying to production.)
-app.use(['/mock-api/predix-asset', '/api/predix-asset'], jsonServer.router(mockAssetRoutes));
-app.use(['/mock-api/predix-timeseries', '/api/predix-timeseries'], mockTimeSeriesRouter);
-app.use(['/mock-api/datagrid', '/api/datagrid'], jsonServer.router(mockRmdDatasourceRoutes));
-require('./routes/mock-live-data.js')(httpServer);
-// ***** END MOCK ROUTES *****
+// var mockAssetRoutes = require('./routes/mock-asset.js')();
+// var mockTimeSeriesRouter = require('./routes/mock-time-series.js');
+// var mockRmdDatasourceRoutes = require('./routes/mock-rmd-datasource.js')();
+// // add mock API routes.  (Remove these before deploying to production.)
+// app.use(['/mock-api/predix-asset', '/api/predix-asset'], jsonServer.router(mockAssetRoutes));
+// app.use(['/mock-api/predix-timeseries', '/api/predix-timeseries'], mockTimeSeriesRouter);
+// app.use(['/mock-api/datagrid', '/api/datagrid'], jsonServer.router(mockRmdDatasourceRoutes));
+// require('./routes/mock-live-data.js')(httpServer);
+// // ***** END MOCK ROUTES *****
 
 // route to return info for path-guide component.
 app.use('/learningpaths', require('./routes/learning-paths')(config));
@@ -186,10 +186,10 @@ app.get('/favicon.ico', function (req, res) {
 });
 
 app.get('/config', function(req, res) {
-  let title = "Predix WebApp Starter";
-  if (config.isAssetConfigured()) {
-    title = "RMD Reference App";
-  }
+  let title = "Email Notification Service";
+  // if (config.isAssetConfigured()) {
+  //   title = "RMD Reference App";
+  // }
   res.send({wsUrl: config.websocketServerURL, appHeader: title});
 });
 

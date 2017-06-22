@@ -114,8 +114,12 @@ function getEndpointAndZone(key, credentials) {
 		var urlObj = url.parse(credentials.query.uri);
 		out.serviceEndpoint = urlObj.host ? urlObj.protocol + '//' + urlObj.host : null;
 		out.zoneId = credentials.query['zone-http-header-value'];
-	}
-	if (!out.serviceEndpoint) {
+	} else if (key === 'notification') {
+		var uri = "https://ev-notification-service-cf3.run.aws-usw02-dev.ice.predix.io";
+		// out.serviceEndpoint = isValidUrl(credentials.catalogUri) ? credentials.catalogUri : null;
+		out.serviceEndpoint = isValidUrl(credentials.catalogUri) ? credentials.catalogUri : null;
+		out.zoneId = null;
+	} if (!out.serviceEndpoint) {
 		console.log('no proxy set for service: ' + key);
 	}
 	return out;
@@ -158,12 +162,14 @@ var addClientTokenMiddleware = function(req, res, next) {
 		if (!req.session.clientToken) {
 			// console.log('fetching client token');
 			getClientToken(function(token) {
+				console.log(token);
 				req.session.clientToken = token;
 				req.headers['Authorization'] = req.session.clientToken;
 				next();
 			}, errorHandler);
 		} else {
 			// console.log('client token found in session');
+			console.log(req.session.clientToken);
 			req.headers['Authorization'] = req.session.clientToken;
 			next();
 		}

@@ -2,7 +2,7 @@
   "development": {
     "note": "Out of the box, the predix-webapp-starter app uses mock data, so these values are not required.  Set these values for connecting to real Predix services.",
     "uaaURL": "https://3d366fde-7331-4f3d-b642-a600e6d88825.predix-uaa.run.aws-usw02-pr.ice.predix.io",
-    "base64ClientCredential": "Y2xpZW50MTpjbGllbnQuc2VjcmV0",
+    "base64ClientCredential": "bm90aWZpY2F0aW9uOm5vdGlmaWNhdGlvbi51aQ==",
     "loginBase64ClientCredential": "Y2xpZW50MjpjbGllbnQuc2VjcmV0",
     "appURL": "http://localhost:5000",
     "timeseriesURL": "{Time Series URL from VCAPS}",
