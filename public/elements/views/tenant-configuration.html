@@ -12,25 +12,15 @@
           margin-top: 0;
         }
       </style>
-      <div>
-        <marked-element id="aboutContentMarkdown" markdown="">
-          <div class="markdown-html"></div>
-        </marked-element>      </div>
     </px-card>
-    <iron-ajax id="aboutContentAjaxEl" handle-as="text"></iron-ajax>
+
   </template>
   <script>
     Polymer({
       is: 'about-view',
       properties: {},
       ready: function() {
-        var that = this;
-        this.$.aboutContentAjaxEl.url = "/docs";
-
-        this.$.aboutContentAjaxEl.addEventListener('response', function(evt) {
-          that.$.aboutContentMarkdown.markdown = evt.detail.response;
-        });
-        this.$.aboutContentAjaxEl.generateRequest();
+        return;
       }
     });
   </script>

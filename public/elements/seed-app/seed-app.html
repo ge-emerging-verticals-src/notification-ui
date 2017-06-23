@@ -73,7 +73,7 @@
           </px-view>
 
           <!-- about route and view -->
-          <app-route
+          <!-- <app-route
             route="[[_route]]"
             pattern="/about"
             active="{{_aboutActive}}">
@@ -81,12 +81,12 @@
           <px-view
             active="[[_aboutActive]]"
             element-href="/elements/views/about-view.html">
-          </px-view>
+          </px-view> -->
 
           <!-- /simple-asset route and view -->
           <app-route
             route="[[_route]]"
-            pattern="/tenant"
+            pattern="/tenant-info"
             active="{{_tenantinfoActive}}">
           </app-route>
           <px-view
@@ -102,6 +102,17 @@
          <px-view
            active="[[_eventinfoActive]]"
            element-href="/elements/views/event-info.html">
+        </px-view>
+
+        <!-- about route and view -->
+        <app-route
+          route="[[_route]]"
+          pattern="/tenant-configuration"
+          active="{{_configActive}}">
+        </app-route>
+        <px-view
+          active="[[_configActive]]"
+          element-href="/elements/views/tenant-configuration.html">
         </px-view>
 
         </main>
@@ -149,17 +160,24 @@
                 "path": "/rmd",
                 "icon": "fa-line-chart"
               },
-              {
-                "label": "About",
-                "path": "/about",
-                "icon": "fa-info-circle"
-              }
 
                // tenant info page
-              ,{
-                "label": "Tenant Display",
+              {
+                "label": "Tenants",
                 "path": "/tenant",
-                "icon": "fa-sitemap"
+                "icon": "fa-info-circle",
+                "subitems":[
+                  {
+                    "id": "tenant-display",
+                    "label":"Tenant Display",
+                    "path": "/tenant-info"
+                  },
+                  {
+                    "id": "tenant-configuration",
+                    "label":"Tenant Configuration",
+                    "path": "/tenant-configuration"
+                  }
+                ]
               }
               // end tenant info
 
@@ -167,7 +185,7 @@
               ,{
                 "label": "Event Display",
                 "path": "/events",
-                "icon": "fa-sitemap"
+                "icon": "fa-info-circle"
               }
             ]
           }
