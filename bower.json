@@ -41,19 +41,21 @@
     "px-inbox": "https://github.com/akstupp/px-inbox.git#a46068b01f850ca935b7fa3ef44436047da1b3f5",
     "format-notification-response": "https://github.build.ge.com/ev-components/format-notification-response.git",
     "event-inbox": "https://github.build.ge.com/ev-components/event-inbox.git",
-    "px-polymer-font-awesome": "v2.0.0-prerelease-1"
+    "px-polymer-font-awesome": "v2.0.0-prerelease-1",
+    "configure-tenants": "https://github.build.ge.com/ev-components/configure-tenants.git"
   },
   "resolutions": {
     "px-datetime-common": "^0.7.0",
     "app-localize-behavior": "^0.10.2",
     "px-inbox": "a46068b01f850ca935b7fa3ef44436047da1b3f5",
     "px-dropdown": "^4.0.0",
-    "px-polymer-font-awesome": "v2.0.0-prerelease-1",
+    "px-polymer-font-awesome": "^2.0.0",
     "px-theme": "^3.0.0",
     "px-colors-design": "^1.0.0",
     "px-typography-design": "^2.0.0",
     "px-defaults-design": "^2.0.0",
     "px-mixins-design": "^1.0.0",
-    "px-functions-design": "^2.0.0"
+    "px-functions-design": "^2.0.0",
+    "px-card": "^0.7.1"
   }
 }
