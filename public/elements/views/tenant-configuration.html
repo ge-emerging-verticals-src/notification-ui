@@ -2,22 +2,16 @@
 <link rel="import" href="../../bower_components/px-view-header/px-view-header.html">
 <link rel="import" href="../../bower_components/px-card/px-card.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../../bower_components/marked-element/marked-element.html">
+<link rel="import" href="../../bower_components/configure-tenants/configure-tenants.html">
 
-<dom-module id="about-view">
+<dom-module id="tenant-configuration">
   <template>
-    <px-card id="myCard" header-text="About this application">
-      <style is="custom-style">
-        div.markdown-html > h2 {
-          margin-top: 0;
-        }
-      </style>
-    </px-card>
+    <configure-tenants></configure-tenants>
 
   </template>
   <script>
     Polymer({
-      is: 'about-view',
+      is: 'tenant-configuration',
       properties: {},
       ready: function() {
         return;
