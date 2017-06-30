@@ -108,10 +108,10 @@
         <app-route
           route="[[_route]]"
           pattern="/tenant-configuration"
-          active="{{_configActive}}">
+          active="{{_tenantConfigurationActive}}">
         </app-route>
         <px-view
-          active="[[_configActive]]"
+          active="[[_tenantConfigurationActive]]"
           element-href="/elements/views/tenant-configuration.html">
         </px-view>
 
@@ -164,30 +164,23 @@
                // tenant info page
               {
                 "label": "Tenants",
-                "path": "/tenant",
-                "icon": "fa-info-circle",
-                "subitems":[
-                  {
-                    "id": "tenant-display",
-                    "label":"Tenant Display",
-                    "path": "/tenant-info"
-                  },
-                  {
-                    "id": "tenant-configuration",
-                    "label":"Tenant Configuration",
-                    "path": "/tenant-configuration"
-                  }
-                ]
-              }
+                "path": "/tenant-info",
+                "icon": "fa-info-circle"
+              },
+              {
+                "label":"Tenant Configuration",
+                "path": "/tenant-configuration",
+                "icon": "fa-info-circle"
+              },
               // end tenant info
 
               // event info page
-              ,{
+              {
                 "label": "Event Display",
                 "path": "/events",
                 "icon": "fa-info-circle"
               }
-            ]
+            ];
           }
         },
 
