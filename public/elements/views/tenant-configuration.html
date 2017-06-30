@@ -4,18 +4,17 @@
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/configure-tenants/configure-tenants.html">
 
-<dom-module id="about-view">
+<dom-module id="tenant-configuration">
   <template>
     <configure-tenants></configure-tenants>
-
   </template>
-  <script>
-    Polymer({
-      is: 'about-view',
-      properties: {},
-      ready: function() {
-        return;
-      }
-    });
-  </script>
 </dom-module>
+<script>
+  Polymer({
+    is: 'tenant-configuration',
+    properties: {},
+    ready: function() {
+      return;
+    }
+  });
+</script>
