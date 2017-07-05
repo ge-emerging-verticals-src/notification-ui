@@ -3,12 +3,16 @@
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/px-data-table/px-data-table.html">
 <link rel="import" href="../../bower_components/format-notification-response/format-notification-response.html">
+<link rel="import" href="../../bower_components/configure-tenants/configure-tenants.html">
 
 <dom-module id="tenant-info">
   <template>
     <px-card>
-      <format-notification-response></format-notification-response>
+      <format-notification-response id="formatNotification"></format-notification-response>
     </px-card>
+    <px-card>
+    <configure-tenants></configure-tenants>
+  </px-card>
 
       <!-- Choose one of these iron-ajax elements to load data from the source of your choice. -->
 
@@ -35,6 +39,13 @@
       properties: {
 
       },
+
+      ready: function() {
+        this.addEventListener('refresh-data', function(event) {
+          event.stopPropagation();
+          this.$.formatNotification.newData();
+        });
+      }
 
     });
   </script>
