@@ -104,6 +104,16 @@
            element-href="/elements/views/event-info.html">
         </px-view>
 
+        <app-route
+          route="[[_route]]"
+          pattern="/configurations"
+          active="{{_configurationsinfoActive}}">
+        </app-route>
+        <px-view
+          active="[[_configurationsinfoActive]]"
+          element-href="/elements/views/configurations.html">
+       </px-view>
+
         <!-- about route and view -->
         <!-- <app-route
           route="[[_route]]"
@@ -178,6 +188,12 @@
               {
                 "label": "Event Display",
                 "path": "/events",
+                "icon": "fa-info-circle"
+              },
+
+              {
+                "label": "Configurations",
+                "path": "/configurations",
                 "icon": "fa-info-circle"
               }
             ];

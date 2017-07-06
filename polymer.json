@@ -2,7 +2,7 @@
   "entrypoint": "public/index.html",
   "shell": "public/elements/seed-app/seed-app.html",
   "fragments": [
-    "public/elements/views/tenant-configuration.html",
+    "public/elements/views/configurations.html",
     "public/elements/views/rmd-view.html",
     "public/elements/views/tenant-info.html",
     "public/elements/views/event-info.html"
