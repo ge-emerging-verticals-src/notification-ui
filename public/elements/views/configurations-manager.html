@@ -2,16 +2,17 @@
 <link rel="import" href="../../bower_components/px-view-header/px-view-header.html">
 <link rel="import" href="../../bower_components/px-card/px-card.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../../bower_components/configure-tenants/configure-tenants.html">
+<link rel="import" href="../../bower_components/test-config/test-config.html">
 
-<dom-module id="configurations">
+<dom-module id="configurations-manager">
   <template>
-    <configure-tenants></configure-tenants>
+    <test-config></test-config>
 
   </template>
+</dom-module>
   <script>
     Polymer({
-      is: 'configurations',
+      is: 'configurations-manager',
       properties: {},
       ready: function() {
         return;

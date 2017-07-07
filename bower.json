@@ -43,7 +43,8 @@
     "event-inbox": "https://github.build.ge.com/ev-components/event-inbox.git",
     "px-polymer-font-awesome": "v2.0.0-prerelease-1",
     "configure-tenants": "https://github.build.ge.com/ev-components/configure-tenants.git",
-    "iron-icons": "^2.0.1"
+    "iron-icons": "^2.0.1",
+    "test-config": "https://github.build.ge.com/ev-components/configuration-manager.git"
   },
   "resolutions": {
     "px-datetime-common": "^0.7.0",

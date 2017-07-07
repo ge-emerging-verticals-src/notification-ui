@@ -107,19 +107,16 @@ function getEndpointAndZone(key, credentials) {
 		// do nothing. authentication handled by the passport module.
 		// return here, so we don't display a confusing log message.
 		return out;
-	} else if (key === 'predix-asset') {
-		out.serviceEndpoint = isValidUrl(credentials.uri) ? credentials.uri : null;
-		out.zoneId = credentials.zone['http-header-value'];
-	} else if (key === 'predix-timeseries') {
-		var urlObj = url.parse(credentials.query.uri);
-		out.serviceEndpoint = urlObj.host ? urlObj.protocol + '//' + urlObj.host : null;
-		out.zoneId = credentials.query['zone-http-header-value'];
 	} else if (key === 'notification') {
-		var uri = "https://ev-notification-service-cf3.run.aws-usw02-dev.ice.predix.io";
-		// out.serviceEndpoint = isValidUrl(credentials.catalogUri) ? credentials.catalogUri : null;
 		out.serviceEndpoint = isValidUrl(credentials.catalogUri) ? credentials.catalogUri : null;
+		out.servicePrefix = '/v1/tenants/' + credentials.tenantUuid;
 		out.zoneId = null;
-	} if (!out.serviceEndpoint) {
+	} else if (key === 'user-provided') {
+		out.serviceEndpoint = isValidUrl(credentials.catalogUri) ? credentials.catalogUri : null;
+		out.servicePrefix = '/v1/tenants/' + credentials.tenantUuid;
+		out.zoneId = null;
+	}
+	if (!out.serviceEndpoint) {
 		console.log('no proxy set for service: ' + key);
 	}
 	return out;
@@ -136,11 +133,12 @@ var setProxyRoute = function(key, credentials) {
 	// console.log('zone id: ' + routeOptions.zoneId);
 	var decorator = buildDecorator(routeOptions.zoneId);
 
-	router.use('/' + key, expressProxy(routeOptions.serviceEndpoint, {
+	router.use('/' + (key === 'user-provided' ? 'notification' : key), expressProxy(routeOptions.serviceEndpoint, {
 		https: true,
 		forwardPath: function (req) {
-			console.log('req.url: ' + req.url);
-			return req.url;
+			var prefix = routeOptions.servicePrefix || '';
+			console.log('req.url: ' + prefix + req.url);
+			return prefix + req.url;
 		},
 		intercept: cleanResponseHeaders,
 		decorateRequest: decorator
