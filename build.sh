@@ -6,4 +6,6 @@ bower --allow-root install
 
 gulp dist
 
-zip -r email-notification-ui-0.0.1-SNAPSHOT.zip ./dist/*
+cd dist
+zip -r ../email-notification-ui-0.0.1-SNAPSHOT.zip *
+cd ..
