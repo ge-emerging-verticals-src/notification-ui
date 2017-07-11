@@ -44,7 +44,12 @@
     "px-polymer-font-awesome": "v2.0.0-prerelease-1",
     "configure-tenants": "https://github.build.ge.com/ev-components/configure-tenants.git",
     "iron-icons": "^2.0.1",
-    "test-config": "https://github.build.ge.com/ev-components/configuration-manager.git"
+    "test-config": "https://github.build.ge.com/ev-components/configuration-manager.git",
+    "paper-button": "^2.0.0",
+    "paper-dropdown-menu": "^2.0.0",
+    "paper-listbox": "^2.0.0",
+    "paper-item": "^2.0.0",
+    "neon-animation": "^2.0.1"
   },
   "resolutions": {
     "px-datetime-common": "^0.7.0",
