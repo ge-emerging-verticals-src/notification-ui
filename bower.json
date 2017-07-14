@@ -44,12 +44,14 @@
     "px-polymer-font-awesome": "v2.0.0-prerelease-1",
     "configure-tenants": "https://github.build.ge.com/ev-components/configure-tenants.git",
     "iron-icons": "^2.0.1",
-    "test-config": "https://github.build.ge.com/ev-components/configuration-manager.git",
+    "test-config": "https://github.build.ge.com/ev-components/configuration-manager.git#material-design",
     "paper-button": "^2.0.0",
     "paper-dropdown-menu": "^2.0.0",
     "paper-listbox": "^2.0.0",
     "paper-item": "^2.0.0",
-    "neon-animation": "^2.0.1"
+    "neon-animation": "^2.0.1",
+    "bwt-datatable": "^1.0.11",
+    "paper-progress": "^2.0.1"
   },
   "resolutions": {
     "px-datetime-common": "^0.7.0",
@@ -66,6 +68,11 @@
     "px-card": "^0.7.1",
     "iron-ajax": "^1.4.3",
     "iron-a11y-keys": "^2.0.0",
-    "iron-dropdown": "^2.0.0"
+    "iron-dropdown": "^2.0.0",
+    "polymer": "^1.4.0",
+    "paper-icon-button": "^2.0.0",
+    "paper-item": "^2.0.0",
+    "neon-animation": "^2.0.1",
+    "webcomponentsjs": "^v1.0.0"
   }
 }
