@@ -117,6 +117,16 @@
           element-href="/elements/views/configurations-manager.html">
        </px-view>
 
+       <app-route
+         route="[[_route]]"
+         pattern="/email"
+         active="{{_emailinfoActive}}">
+       </app-route>
+       <px-view id="emailPxView"
+         active="[[_emailinfoActive]]"
+         element-href="/elements/views/email-manager.html">
+       </px-view>
+
         <!-- about route and view -->
         <!-- <app-route
           route="[[_route]]"
@@ -197,6 +207,12 @@
               {
                 "label": "Configurations",
                 "path": "/configurations-manager",
+                "icon": "fa-info-circle"
+              },
+
+              {
+                "label": "Email Manager",
+                "path": "/email",
                 "icon": "fa-info-circle"
               }
             ];
