@@ -64,7 +64,6 @@
   "resolutions": {
     "px-datetime-common": "^0.7.0",
     "app-localize-behavior": "^0.10.2",
-    "px-inbox": "83b219230f547cc81acd0b67a1f281f4195472bc",
     "px-dropdown": "^4.0.0",
     "px-polymer-font-awesome": "^2.0.0",
     "px-theme": "^2.0.3",
