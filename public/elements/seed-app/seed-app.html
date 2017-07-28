@@ -127,6 +127,16 @@
          element-href="/elements/views/email-manager.html">
        </px-view>
 
+       <app-route
+         route="[[_route]]"
+         pattern="/templates"
+         active="{{_templatesinfoActive}}">
+       </app-route>
+       <px-view id="templatesPxView"
+         active="[[_templatesinfoActive]]"
+         element-href="/elements/views/edit-templates.html">
+       </px-view>
+
         <!-- about route and view -->
         <!-- <app-route
           route="[[_route]]"
@@ -214,6 +224,12 @@
                 "label": "Email Manager",
                 "path": "/email",
                 "icon": "fa-envelope"
+              },
+
+              {
+                "label": "Template Manager",
+                "path": "/templates",
+                "icon": "fa-info-circle"
               }
             ];
           }

@@ -21,9 +21,7 @@ module.exports = function(gulp) {
       'public/bower_components/px-polymer-font-awesome',
       'public/bower_components/px-data-table',
       'public/bower_components/format-notification-response',
-
-      'public/elements/dev-guide'
-    ];
+      'public/elements/dev-guide'];
 
     var extraStreams = [];
 
@@ -33,7 +31,7 @@ module.exports = function(gulp) {
 
     var publicFiles = gulp.src(['public/*.*']).pipe(gulp.dest('./dist/public'));
     var docsFiles = gulp.src(['public/docs/**/*.*']).pipe(gulp.dest('./dist/public/docs'));
-    var server = gulp.src(['server/**/*.*']).pipe(gulp.dest('./dist/server'))
+    var server = gulp.src(['server/**/*.*']).pipe(gulp.dest('./dist/server'));
     var packageFile = gulp.src(['package.json']).pipe(gulp.dest('dist'));
 
     return merge(server, packageFile, extraStreams, publicFiles, docsFiles);

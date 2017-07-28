@@ -6,7 +6,8 @@
     "public/elements/views/rmd-view.html",
     "public/elements/views/tenant-info.html",
     "public/elements/views/event-info.html",
-    "public/elements/views/email-manager.html"
+    "public/elements/views/email-manager.html",
+    "public/elements/views/edit-templates.html"
   ],
   "sources": [
     "public/elements/**/*",

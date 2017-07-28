@@ -1,0 +1,218 @@
+<!--
+    Relative paths assume component is being run from inside an app or another component, where dependencies are flat
+    siblings. When this component is run from its own repo (e.g. tests, examples), we assume the server is started with
+    'gulp serve' (or similar server setup) to enable correct finding of bower dependencies for local runs.
+-->
+<link rel="import" href="../../bower_components/polymer/polymer.html" />
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html" />
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html" />
+<link rel="import" href="../../bower_components/bwt-datatable/bwt-datatable.html" />
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html" />
+<link rel="import" href="../../bower_components/vaadin-upload/vaadin-upload.html" />
+<link rel="import" href="../../bower_components/px-card/px-card.html" />
+
+
+<dom-module id="edit-templates">
+  <template>
+    <style>
+    .font-type {
+      font-family: 'Roboto', sans-serif;
+    }
+
+    .flex {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      margin: auto; }
+
+
+    .flex--row {
+      -webkit-box-orient: horizontal;
+      -webkit-box-direction: normal;
+          -ms-flex-direction: row;
+              flex-direction: row; }
+
+    .flex--col {
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+          -ms-flex-direction: column;
+              flex-direction: column; }
+
+    .flex--center {
+      -webkit-box-pack: center;
+          -ms-flex-pack: center;
+              justify-content: center; }
+
+    .flex--justify {
+      -webkit-box-pack: justify;
+          -ms-flex-pack: justify;
+              justify-content: space-between; }
+
+    .flex--middle {
+      -webkit-box-align: center;
+          -ms-flex-align: center;
+              align-items: center; }
+
+    .flex--stretch {
+      -webkit-box-align: stretch;
+          -ms-flex-align: stretch;
+              align-items: stretch; }
+
+
+    </style>
+
+    <iron-ajax
+    id="ajax"
+    url="/api/notification/"
+    method="GET"
+    body="{}"
+    handle-as="json"
+    content-type="application/json">
+  </iron-ajax>
+
+  <!-- TODO: FILL OUT DIALOGS -->
+  <paper-dialog id="createTemplate">
+
+
+  </paper-dialog>
+
+  <paper-dialog id="createMatcher">
+
+
+  </paper-dialog>
+
+  <paper-dialog id="createRecipient">
+
+
+  </paper-dialog>
+
+  <paper-dialog id="editTemplate">
+
+
+  </paper-dialog>
+
+  <px-card header-text="Manage Templates, Matchers, and Recipients">
+    <div id="entire-page" class="flex flex--col flex--justify flex--stretch font-type">
+        <div id="dropdowns-view" class="flex flex--row flex--justify flex--stretch" style="flex: 1 1 auto;">
+          <div id="choose-template" class="flex flex--row flex--justify flex--stretch" style="flex: 1 1 auto;">
+            <paper-dropdown-menu id="pickTemplate">
+            </paper-dropdown-menu>
+          </div>
+          <div id="choose-matcher" class="flex flex--row flex--justify flex--stretch" style="flex: 1 1 auto;">
+            <paper-dropdown-menu id="pickMatcher">
+            </paper-dropdown-menu>
+          </div>
+        </div>
+        <div id="tables-view" class="flex flex--row flex--justify flex--stretch" style="flex: 1 1 auto;">
+          <div id="view-parameters" class="flex flex--row flex--justify flex--stretch" style="flex: 1 1 auto;">
+            <paper-datatable id="viewParameters" data="{{templates}}">
+              <paper-datatable-column header="Template Parameters" property="parameters"></paper-datatable-column>
+            </paper-datatable>
+          </div>
+          <div id="view-recipients" class="flex flex--row flex--justify flex--stretch" style="flex: 1 1 auto;">
+            <paper-datatable id="viewRecipients" data="{{recipients}}">
+              <paper-datatable-column header="Recipients" property="recipient"></paper-datatable-column>
+            </paper-datatable>
+          </div>
+        </div>
+  </div>
+    </px-card>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'edit-templates',
+
+    properties:
+    {
+      templates: {
+        type: Array,
+        value: function() {
+          return [];
+        }
+      },
+
+      parameters: {
+        type: Array,
+        value: function() {
+          return [];
+        }
+      },
+
+      templateParams: {
+        type: Array,
+        value: function() {
+          return [];
+        }
+      },
+
+      matchers: {
+        type: Array,
+        value: function() {
+          return [];
+        }
+      },
+
+      recipients: {
+        type: Array,
+        value: function() {
+          return [];
+        }
+      }
+    },
+
+    ready: function() {
+      this.getTemplates();
+
+    },
+
+    setAjax: function(url, method, body) {
+      var ajax = document.querySelector('#ajax');
+      ajax.url = url;
+      ajax.method = method;
+      ajax.body = body;
+      return ajax;
+    },
+
+    getTemplates: function() {
+      self = document.querySelector('edit-templates');
+      var ajax = self.setAjax("/api/notification/templates", "GET", {});
+      ajax.addEventListener('response', templateResponse);
+      ajax.generateRequest();
+
+      function templateResponse(e) {
+        ajax.removeEventListener('response', templateResponse);
+        self.templates = e.detail.response.payload;
+      }
+    },
+
+    getMatchers: function(templateUuid) {
+      self = document.querySelector('edit-templates');
+      let url = "/api/notification/templates/" + templateUuid + "matchers";
+      var ajax = self.setAjax(url, "GET", {});
+      ajax.addEventListener('response', matcherResponse);
+      ajax.generateRequest();
+
+      function matcherResponse(e) {
+        ajax.removeEventListener('response', matcherResponse);
+        self.matchers = e.detail.response.payload;
+      }
+    },
+
+    getRecipients: function(templateUuid, matcherUuid) {
+      self = document.querySelector('edit-templates');
+      let url = "/api/notification/templates/" + templateUuid + "matchers/" + matcherUuid + "recipients";
+      var ajax = self.setAjax(url, "GET", {});
+      ajax.addEventListener('response', recipientResponse);
+      ajax.generateRequest();
+
+      function recipientResponse(e) {
+        ajax.removeEventListener('response', recipientResponse);
+        self.recipients = e.detail.response.payload.map(function(email) {
+          return { "recipient": email };
+        });
+      }
+    }
+
+  });
+</script>
