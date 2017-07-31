@@ -57,9 +57,7 @@
       -webkit-box-align: stretch;
           -ms-flex-align: stretch;
               align-items: stretch; }
-
-
-    </style>
+  </style>
 
     <iron-ajax
     id="ajax"
@@ -94,22 +92,36 @@
   <px-card header-text="Manage Templates, Matchers, and Recipients">
     <div id="entire-page" class="flex flex--col flex--justify flex--stretch font-type">
         <div id="dropdowns-view" class="flex flex--row flex--justify flex--stretch" style="flex: 1 1 auto;">
-          <div id="choose-template" class="flex flex--row flex--justify flex--stretch" style="flex: 1 1 auto;">
-            <paper-dropdown-menu id="pickTemplate">
+          <div id="choose-template" class="flex flex--row flex--justify flex--stretch flex--middle flex--center" style="flex: 1 1 auto;">
+            <paper-dropdown-menu id="pickTemplate" placeholder="Choose Template" label="Template">
+              <paper-listbox slot="dropdown-content">
+                <template is="dom-repeat" items="{{templates}}" as="template">
+                  <paper-item>
+                    {{template.name}}
+                  </paper-item>
+                </template>
+              </paper-listbox>
             </paper-dropdown-menu>
           </div>
-          <div id="choose-matcher" class="flex flex--row flex--justify flex--stretch" style="flex: 1 1 auto;">
-            <paper-dropdown-menu id="pickMatcher">
+          <div id="choose-matcher" class="flex flex--row flex--justify flex--stretch flex--center  flex--middle" style="flex: 1 1 auto;">
+            <paper-dropdown-menu id="pickMatcher" placeholder="Choose Matcher" label="Matcher">
+              <paper-listbox slot="dropdown-content">
+                <template is="dom-repeat" items="{{matchers}}" as="matcher">
+                  <paper-item>
+                    {{matcher}}
+                  </paper-item>
+                </template>
+              </paper-listbox>
             </paper-dropdown-menu>
           </div>
         </div>
         <div id="tables-view" class="flex flex--row flex--justify flex--stretch" style="flex: 1 1 auto;">
-          <div id="view-parameters" class="flex flex--row flex--justify flex--stretch" style="flex: 1 1 auto;">
+          <div id="view-parameters" class="flex flex--row flex--justify flex--stretch flex--middle flex--center" style="flex: 1 1 auto;">
             <paper-datatable id="viewParameters" data="{{templates}}">
               <paper-datatable-column header="Template Parameters" property="parameters"></paper-datatable-column>
             </paper-datatable>
           </div>
-          <div id="view-recipients" class="flex flex--row flex--justify flex--stretch" style="flex: 1 1 auto;">
+          <div id="view-recipients" class="flex flex--row flex--justify flex--stretch flex--center flex--middle" style="flex: 1 1 auto;">
             <paper-datatable id="viewRecipients" data="{{recipients}}">
               <paper-datatable-column header="Recipients" property="recipient"></paper-datatable-column>
             </paper-datatable>
@@ -170,13 +182,13 @@
       var ajax = document.querySelector('#ajax');
       ajax.url = url;
       ajax.method = method;
-      ajax.body = body;
+      ajax.body = body === null ? {} : body;
       return ajax;
     },
 
     getTemplates: function() {
       self = document.querySelector('edit-templates');
-      var ajax = self.setAjax("/api/notification/templates", "GET", {});
+      var ajax = self.setAjax("/api/notification/templates", "GET", null);
       ajax.addEventListener('response', templateResponse);
       ajax.generateRequest();
 
@@ -189,7 +201,7 @@
     getMatchers: function(templateUuid) {
       self = document.querySelector('edit-templates');
       let url = "/api/notification/templates/" + templateUuid + "matchers";
-      var ajax = self.setAjax(url, "GET", {});
+      var ajax = self.setAjax(url, "GET", null);
       ajax.addEventListener('response', matcherResponse);
       ajax.generateRequest();
 
@@ -202,7 +214,7 @@
     getRecipients: function(templateUuid, matcherUuid) {
       self = document.querySelector('edit-templates');
       let url = "/api/notification/templates/" + templateUuid + "matchers/" + matcherUuid + "recipients";
-      var ajax = self.setAjax(url, "GET", {});
+      var ajax = self.setAjax(url, "GET", null);
       ajax.addEventListener('response', recipientResponse);
       ajax.generateRequest();
 
