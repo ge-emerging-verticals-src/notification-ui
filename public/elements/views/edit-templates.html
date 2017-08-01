@@ -19,16 +19,12 @@
       font-family: 'Roboto', sans-serif;
     }
 
-    .table-fix{
-      width: 100%;
-    }
-
     .flex {
       display: -webkit-box;
       display: -ms-flexbox;
       display: flex;
-      margin: auto; }
-
+      margin: auto;
+    }
 
     .flex--row {
       -webkit-box-orient: horizontal;
@@ -102,8 +98,8 @@
   </paper-dialog>
 
   <px-card header-text="Manage Templates, Matchers, and Recipients" class="font-type">
-    <div id="entire-page" class="flex flex--col flex--justify flex--stretch font-type">
-        <div id="dropdowns-view" class="flex flex--row flex--stretch flex--justify" style="flex: 1 1 auto; width: 100%;">
+    <div id="entire-page" class="flex flex--row flex--justify flex--stretch font-type">
+        <div id="left-view" style="flex: 1 1 auto; width: 100%;">
           <div id="choose-template" style="flex: 1 1 auto; width: 100%; text-align: center;">
             <paper-dropdown-menu id="pickTemplate" placeholder="Choose Template" label="Template" style="width: 60%;">
               <paper-listbox slot="dropdown-content">
@@ -115,6 +111,13 @@
               </paper-listbox>
             </paper-dropdown-menu>
           </div>
+          <div id="view-parameters" class="flex" style="flex: 1 1 auto; text-align: center; width: 70%;">
+            <paper-datatable id="viewParameters" data="{{parameters}}" class="flex" style="width: 70%;">
+              <paper-datatable-column header="Template Parameters" property="parameter"></paper-datatable-column>
+            </paper-datatable>
+          </div>
+        </div>
+        <div id="right-view" style="flex: 1 1 auto; width: 100%;">
           <div id="choose-matcher" style="flex: 1 1 auto; width: 100%; text-align: center;">
             <paper-dropdown-menu id="pickMatcher" placeholder="Choose Matcher" label="Matcher" style="width: 60%;">
               <paper-listbox slot="dropdown-content">
@@ -126,15 +129,8 @@
               </paper-listbox>
             </paper-dropdown-menu>
           </div>
-        </div>
-        <div id="tables-view" class="flex flex--row flex--justify flex--stretch" style="flex: 1 1 auto; width: 100%;">
-          <div id="view-parameters" class="flex" style="flex: 1 1 auto; text-align: center;">
-            <paper-datatable id="viewParameters" data="{{parameters}}" class="flex container" style="width: 80%;">
-              <paper-datatable-column header="Template Parameters" property="parameter"></paper-datatable-column>
-            </paper-datatable>
-          </div>
-          <div id="view-recipients" style="flex: 1 1 auto; text-align: center;" class="flex">
-            <paper-datatable id="viewRecipients" data="{{recipients}}" style="width: 80%;" class="flex container">
+          <div id="view-recipients" style="flex: 1 1 auto; text-align: center; width: 70%;" class="flex">
+            <paper-datatable id="viewRecipients" data="{{recipients}}" class="flex" style="width: 70%;">
               <paper-datatable-column header="Recipients" property="recipient"></paper-datatable-column>
             </paper-datatable>
           </div>
@@ -186,8 +182,9 @@
       fixTable(this.$.viewRecipients);
 
       function fixTable(table) {
-        if (table.querySelector('#container') {
-          table.querySelector('#container').classList.add('table-fix');
+        if (table.querySelector('#container')) {
+          // table.querySelector('#container').classList.add('container');
+          table.querySelector('#container').style.width = 100 + '%';
         } else {
           fixTable(table);
         }
@@ -234,7 +231,7 @@
       function recipientResponse(e) {
         ajax.removeEventListener('response', recipientResponse);
         this.parentElement.recipients = e.detail.response.payload.map(function(email) {
-          return { "recipient": email };
+          return { "recipient": email.recipients };
         });
       }
     },
@@ -274,9 +271,11 @@
     chosenMatcher: function(e) {
       // TODO: Update recipients
         var self = document.querySelector('edit-templates');
-        var matcherLabel = e.detail.value.label;
-        var templateLabel = self.$.pickTemplate.selectedItemLabel;
-        self.getRecipients(templateLabel, matcherLabel);
+        if (e.detail.value) {
+          var matcherLabel = e.detail.value.label;
+          var templateLabel = self.$.pickTemplate.selectedItemLabel;
+          self.getRecipients(templateLabel, matcherLabel);
+      }
     }
 
   });
