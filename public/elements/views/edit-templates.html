@@ -193,7 +193,8 @@
     },
 
     getMatchers: function(templateUuid) {
-      let url = "/api/notification/templates/" + templateUuid + "matchers";
+      console.log(this);
+      let url = "/api/notification/templates/" + templateUuid + "/matchers";
       var ajax = this.setAjax(url, "GET");
       ajax.addEventListener('response', matcherResponse);
       ajax.generateRequest();
@@ -219,31 +220,29 @@
     },
 
     parseTemplate: function(templateBody) {
-      var rawBody = templateBody;
       var regex = /{{.*}}/g;
-      var regexArray = rawBody.match(regex).map(function(match) {
+      var regexArray = templateBody.match(regex).map(function(match) {
         return match.slice(2, match.length - 2);
       });
       return regexArray.map(function(string) {
         return { "parameter": string };
       });
-      return regexArray;
     },
 
     chosenTemplate: function(e) {
       // TODO: CLEAR DATA IN MATCHER AND RECIPIENT DISPLAY, UPDATE MATCHERS IN DROPDOWN, AND PARSE AND DISPLAY PARAMETERS
       var self = document.querySelector('edit-templates');
-      var templateLabel = document.querySelector('#pickTemplate').selectedItemLabel;
-      console.log(templateLabel);
+      var templateLabel = e.detail.value.label;
 
       // Clear data in matcher and recipient display.
-      this.parentElement.matchers = [];
-      this.parentElement.recipients = [];
+      self.recipients = [];
 
-      var template = this.parentElement.templates.find(function(temp) { return temp.templateUuid === templateLabel; });
+      var template = self.templates.find(function(temp) { return temp.templateUuid === templateLabel; });
 
       // Get matchers.
       self.getMatchers(template.templateUuid);
+      console.log(self.matchers);
+      console.log(self.templates);
 
       // Parse and display parameters.
       self.parameters = self.parseTemplate(template.bodyTemplate);
