@@ -26,6 +26,11 @@
       margin: auto;
     }
 
+    .icon-style {
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+
     .flex--row {
       -webkit-box-orient: horizontal;
       -webkit-box-direction: normal;
@@ -70,8 +75,14 @@
 
   <!-- TODO: FILL OUT DIALOGS -->
   <paper-dialog id="createTemplate">
-
-
+    <h2>Create New Template:</h2>
+    <paper-input></paper-input>
+    <paper-input></paper-input>
+    <paper-input></paper-input>
+    <paper-input></paper-input>
+    <!-- UPLOAD -->
+    <paper-button>CANCEL</paper-button>
+    <paper-button>CREATE</paper-button>
   </paper-dialog>
 
   <paper-dialog id="createMatcher">
@@ -97,6 +108,7 @@
     <!-- TODO: UPLOAD TEMPLATE -->
   </paper-dialog>
 
+  <px-card>
   <px-card header-text="Manage Templates, Matchers, and Recipients" class="font-type">
     <div id="entire-page" class="flex flex--row flex--justify flex--stretch font-type">
         <div id="left-view" style="flex: 1 1 auto; width: 100%;">
@@ -110,6 +122,8 @@
                 </template>
               </paper-listbox>
             </paper-dropdown-menu>
+            <paper-icon-button id="createTemplateButton" icon="add" class="icon-style" style="margin-left: 20px;" on-tap="openNewTemplate"></paper-icon-button>
+            <paper-icon-button id="deleteTemplateButton" icon="delete" class="icon-style" on-tap="deleteTemplate"></paper-icon-button>
           </div>
           <div id="view-parameters" class="flex" style="flex: 1 1 auto; text-align: center; width: 70%;">
             <paper-datatable id="viewParameters" data="{{parameters}}" class="flex" style="width: 70%;">
@@ -128,6 +142,8 @@
                 </template>
               </paper-listbox>
             </paper-dropdown-menu>
+            <paper-icon-button id="createMatcher" icon="add" class="icon-style" style="margin-left: 20px;"></paper-icon-button>
+            <paper-icon-button id="deleteMatcher" icon="delete" class="icon-style"></paper-icon-button>
           </div>
           <div id="view-recipients" style="flex: 1 1 auto; text-align: center; width: 70%;" class="flex">
             <paper-datatable id="viewRecipients" data="{{recipients}}" class="flex" style="width: 70%;">
@@ -137,6 +153,7 @@
         </div>
   </div>
     </px-card>
+  </px-card>
   </template>
 </dom-module>
 <script>
@@ -268,14 +285,12 @@
       }
     },
 
-    chosenMatcher: function(e) {
-      // TODO: Update recipients
-        var self = document.querySelector('edit-templates');
-        if (e.detail.value) {
-          var matcherLabel = e.detail.value.label;
-          var templateLabel = self.$.pickTemplate.selectedItemLabel;
-          self.getRecipients(templateLabel, matcherLabel);
-      }
+    openNewTemplate: function(e) {
+      this.$.createTemplate.open();
+    },
+
+    deleteTemplate: function(e) {
+
     }
 
   });
