@@ -75,7 +75,7 @@
     content-type="application/json">
   </iron-ajax>
 
-  <!-- TODO: FILL OUT DIALOGS -->
+
   <paper-dialog id="createTemplate">
     <h2>Create New Template:</h2>
     <paper-dialog-scrollable id="tempScroll">
@@ -92,18 +92,32 @@
   </paper-dialog>
 
   <paper-dialog id="createMatcher">
-
+    <h2>Create Matcher:</h2>
+    <paper-dialog-scrollable id="tempScroll">
+    <paper-input id="newMatcher" label="Matcher:" placeholder="$.[?(@.alert in ['x'])]"></paper-input>
+    </paper-dialog-scrollable>
+    <div class="buttons">
+    <paper-button dialog-dismiss>CANCEL</paper-button>
+    <paper-button on-tap="sendMatcher">CREATE</paper-button>
+    </div>
   </paper-dialog>
 
   <paper-dialog id="createRecipient">
-
+    <h2>Create Recipient:</h2>
+    <paper-dialog-scrollable id="tempScroll">
+    <paper-input id="newRecipient" label="Recipient Email:" placeholder="email@ge.com"></paper-input>
+    </paper-dialog-scrollable>
+    <div class="buttons">
+    <paper-button dialog-dismiss>CANCEL</paper-button>
+    <paper-button on-tap="sendRecipient">CREATE</paper-button>
+    </div>
 
   </paper-dialog>
 
-  <paper-dialog id="editTemplate">
+  <!-- <paper-dialog id="editTemplate">
 
 
-  </paper-dialog>
+  </paper-dialog> -->
 
   <paper-dialog id="templateInvalid">
     <h2>Template Invalid:</h2>
@@ -115,7 +129,6 @@
 
   <px-card>
   <px-card header-text="Manage Templates, Matchers, and Recipients" class="font-type">
-    <div class="flex__item flex__item--msfix"><content></content></div>
     <div id="entire-page" class="flex flex--row flex--justify flex--stretch font-type">
         <div id="left-view" style="flex: 1 1 auto; width: 100%;">
           <div id="choose-template" style="flex: 1 1 auto; width: 100%; text-align: center;">
@@ -126,39 +139,46 @@
                     {{template.name}}
                   </paper-item>
                 </template>
-              </paper-listbox>
-            </paper-dropdown-menu>
-            <paper-icon-button id="createTemplateButton" icon="add" class="icon-style" style="margin-left: 20px;" on-tap="openNewTemplate"></paper-icon-button>
-            <paper-icon-button id="deleteTemplateButton" icon="delete" class="icon-style" on-tap="deleteTemplate"></paper-icon-button>
-          </div>
-          <div id="view-parameters" class="flex" style="flex: 1 1 auto; text-align: center; width: 70%;">
-            <paper-datatable id="viewParameters" data="{{parameters}}" class="flex" style="width: 70%;">
-              <paper-datatable-column header="Template Parameters" property="parameter"></paper-datatable-column>
-            </paper-datatable>
-          </div>
-        </div>
-        <div id="right-view" style="flex: 1 1 auto; width: 100%;">
-          <div id="choose-matcher" style="flex: 1 1 auto; width: 100%; text-align: center;">
-            <paper-dropdown-menu id="pickMatcher" placeholder="Choose Matcher" label="Matcher" style="width: 60%;">
-              <paper-listbox slot="dropdown-content">
-                <template is="dom-repeat" items="{{matchers}}" as="matcher">
+  </paper-listbox>
+  </paper-dropdown-menu>
+  <paper-icon-button id="createTemplateButton" icon="add" class="icon-style" style="margin-left: 20px;" on-tap="openNewTemplate"></paper-icon-button>
+  <paper-icon-button id="deleteTemplateButton" icon="delete" class="icon-style" on-tap="deleteTemplate" disabled></paper-icon-button>
+  </div>
+  <div id="view-parameters" class="flex" style="flex: 1 1 auto; text-align: center; width: 70%;">
+    <paper-datatable id="viewParameters" data="{{parameters}}" class="flex" style="width: 70%;">
+      <paper-datatable-column header="Template Parameters" property="parameter"></paper-datatable-column>
+    </paper-datatable>
+  </div>
+  </div>
+  <div id="right-view" style="flex: 1 1 auto; width: 100%;">
+    <div id="choose-matcher" style="flex: 1 1 auto; width: 100%; text-align: center;">
+      <paper-dropdown-menu id="pickMatcher" placeholder="Choose Matcher" label="Matcher" style="width: 60%;">
+        <paper-listbox slot="dropdown-content">
+          <template is="dom-repeat" items="{{matchers}}" as="matcher">
                   <paper-item label="{{matcher.matcherUuid}}">
                     {{matcher.matchers}}
                   </paper-item>
                 </template>
-              </paper-listbox>
-            </paper-dropdown-menu>
-            <paper-icon-button id="createMatcher" icon="add" class="icon-style" style="margin-left: 20px;"></paper-icon-button>
-            <paper-icon-button id="deleteMatcher" icon="delete" class="icon-style"></paper-icon-button>
-          </div>
-          <div id="view-recipients" style="flex: 1 1 auto; text-align: center; width: 70%;" class="flex">
-            <paper-datatable id="viewRecipients" data="{{recipients}}" class="flex" style="width: 70%;">
-              <paper-datatable-column header="Recipients" property="recipient"></paper-datatable-column>
-            </paper-datatable>
-          </div>
-        </div>
+        </paper-listbox>
+      </paper-dropdown-menu>
+      <paper-icon-button id="createMatcherButton" icon="add" class="icon-style" style="margin-left: 20px;" on-tap="openNewMatcher" disabled></paper-icon-button>
+      <paper-icon-button id="deleteMatcherButton" icon="delete" class="icon-style" on-tap="deleteMatcher" disabled></paper-icon-button>
+    </div>
+    <div id="tables-icon-group" class="flex flex--col">
+      <div id="table-icons" style="margin-top: 30px; text-align: right; width: 75%; margin-bottom: -45px;">
+        <paper-icon-button id="createRecipientButton" icon="add" class="icon-style" on-tap="openRecipient" disabled></paper-icon-button>
+        <paper-icon-button id="deleteRecipientButton" icon="delete" class="icon-style" on-tap="deleteRecipients" disabled></paper-icon-button>
+      </div>
+
+      <div id="view-recipients" style="flex: 1 1 auto; text-align: center; width: 70%;" class="flex">
+        <paper-datatable id="viewRecipients" class="flex" data="{{recipients}}" style="width: 70%;" multi-selection selectable>
+          <paper-datatable-column header="Recipients" property="recipient"></paper-datatable-column>
+        </paper-datatable>
+      </div>
+      </div>
+    </div>
   </div>
-    </px-card>
+  </px-card>
   </px-card>
   </template>
 </dom-module>
@@ -166,8 +186,7 @@
   Polymer({
     is: 'edit-templates',
 
-    properties:
-    {
+    properties: {
       templates: {
         type: Array,
         value: function() {
@@ -254,7 +273,10 @@
       function recipientResponse(e) {
         ajax.removeEventListener('response', recipientResponse);
         this.parentElement.recipients = e.detail.response.payload.map(function(email) {
-          return { "recipient": email.recipients };
+          return {
+            "recipient": email.recipients,
+            "uuid": email.recipientUuid
+          };
         });
       }
     },
@@ -266,7 +288,9 @@
         return match.slice(2, match.length - 2);
       });
       return regexArray.map(function(string) {
-        return { "parameter": string };
+        return {
+          "parameter": string
+        };
       });
     },
 
@@ -279,7 +303,9 @@
         // Clear data in matcher and recipient display.
         self.recipients = [];
 
-        var template = self.templates.find(function(temp) { return temp.templateUuid === templateLabel; });
+        var template = self.templates.find(function(temp) {
+          return temp.templateUuid === templateLabel;
+        });
         if (!template.bodyTemplate) {
           //return error dialog
           self.$.templateInvalid.open();
@@ -289,6 +315,10 @@
 
           // Parse and display parameters.
           self.parameters = self.parseTemplate(template.bodyTemplate);
+
+          // Enabled buttons.
+          document.querySelector('#deleteTemplateButton').disabled = false;
+          document.querySelector('#createMatcherButton').disabled = false;
         }
       }
     },
@@ -299,6 +329,8 @@
         var matcherLabel = e.detail.value.label;
         var templateLabel = self.$.pickTemplate.selectedItemLabel;
         self.getRecipients(templateLabel, matcherLabel);
+        document.querySelector('#deleteMatcherButton').disabled = false;
+        document.querySelector('#createRecipientButton').disabled = false;
       }
     },
 
@@ -323,21 +355,16 @@
         var templateUuid = e.detail.response.payload.templateUuid;
         var url = "/api/notification/templates/" + templateUuid + "/upload";
         var body = upload.files[0];
-        body.type = null;
-        console.log(body);
         var xhr = new XMLHttpRequest();
         var data = new FormData();
         data.append("file", body);
-        console.log(data);
 
         xhr.open("POST", url);
         xhr.withCredentials = true;
-        // xhr.setRequestHeader('Content-Type','multipart/form-data');
-        //xhr.send(data);
+        xhr.setRequestHeader('Content-Type', 'multipart/form-data');
+        xhr.send(data);
 
-        function newUpload(ev) {
-          this.parentElement.parentElement.$.getTemplates();
-        }
+        this.parentElement.getTemplates();
       }
 
       this.$.createTemplate.close();
@@ -349,11 +376,94 @@
       var ajax = this.setAjax(url, "DELETE");
       ajax.addEventListener('response', refreshDelete);
       ajax.generateRequest();
+
       function refreshDelete() {
         ajax.removeEventListener('response', refreshDelete);
         this.parentElement.getTemplates();
       }
-    }
+    },
 
+    openNewMatcher: function(e) {
+      if (this.$.pickTemplate.selectedItemLabel) {
+        this.$.createMatcher.open();
+      } else {
+        this.$.templateInvalid.open();
+      }
+    },
+
+    sendMatcher: function(e) {
+      var self = document.querySelector('edit-templates');
+      var template = this.$.pickTemplate.selectedItemLabel;
+      var url = "/api/notification/templates/" + template + "/matchers";
+      var body = {};
+      body.matchers = document.querySelector('#newMatcher').value;
+      var ajax = self.setAjax(url, "POST", body);
+      ajax.addEventListener('response', createdMatcher);
+      ajax.generateRequest();
+
+      function createdMatcher(e) {
+        ajax.removeEventListener('response', createdMatcher);
+        self.$.createMatcher.close();
+        self.getMatchers(template);
+      }
+    },
+
+    deleteMatcher: function(e) {
+      var template = this.$.pickTemplate.selectedItemLabel;
+      var matcher = this.$.pickMatcher.selectedItemLabel;
+      var url = "/api/notification/templates/" + template + "/matchers/" + matcher;
+      var ajax = this.setAjax(url, "DELETE");
+      ajax.addEventListener('response', refreshMatchers);
+      ajax.generateRequest();
+
+      function refreshMatchers() {
+        ajax.removeEventListener('response', refreshMatchers);
+        this.parentElement.getMatchers(template);
+      }
+    },
+
+    openRecipient: function(e) {
+      document.querySelector('#createRecipient').open();
+    },
+
+    deleteRecipients: function(e) {
+      var self = document.querySelector('edit-templates');
+      var selected = document.querySelector('#viewRecipients').selectedItems;
+      var ids = selected.map(function(recipient) {
+        return recipient.uuid;
+      });
+      for (var i = 0; i < ids.length; i++) {
+        let recip = ids[i];
+        var template = this.$.pickTemplate.selectedItemLabel;
+        var matcher = this.$.pickMatcher.selectedItemLabel;
+        var url = "/api/notification/templates/" + template + "/matchers/" + matcher + "/recipients/" + recip;
+        var ajax = self.setAjax(url, "DELETE");
+        ajax.addEventListener('response', deletedRecipient);
+        ajax.generateRequest();
+      }
+
+      function deletedRecipient(e) {
+        self.getRecipients(template, matcher);
+      }
+    },
+
+    sendRecipient: function(e) {
+      var self = document.querySelector('edit-templates');
+      var template = this.$.pickTemplate.selectedItemLabel;
+      var matcher = this.$.pickMatcher.selectedItemLabel;
+      var url = "/api/notification/templates/" + template + "/matchers/" + matcher + "/recipients";
+      var body = {};
+      var dummy = [];
+      body.recipients = dummy.push(document.querySelector('#newRecipient').value);
+      var ajax = self.setAjax(url, "POST", body);
+      ajax.addEventListener('response', createdRecipient);
+      ajax.generateRequest();
+
+      function createdMatcher(e) {
+        ajax.removeEventListener('response', createdRecipient);
+        self.$.createRecipient.close();
+        self.getRecipients(template, matcher);
+      }
+    }
   });
 </script>
