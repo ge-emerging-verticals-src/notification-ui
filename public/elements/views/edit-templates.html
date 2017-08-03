@@ -5,10 +5,11 @@
 -->
 <link rel="import" href="../../bower_components/polymer/polymer.html" />
 <link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html" />
+<link rel="import" href="../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html" />
 <link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html" />
 <link rel="import" href="../../bower_components/bwt-datatable/bwt-datatable.html" />
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html" />
-<link rel="import" href="../../bower_components/vaadin-upload/vaadin-upload.html" />
+<link rel="import" href="../../bower_components/px-file-upload/px-file-upload.html" />
 <link rel="import" href="../../bower_components/px-card/px-card.html" />
 
 
@@ -76,17 +77,20 @@
   <!-- TODO: FILL OUT DIALOGS -->
   <paper-dialog id="createTemplate">
     <h2>Create New Template:</h2>
-    <paper-input></paper-input>
-    <paper-input></paper-input>
-    <paper-input></paper-input>
-    <paper-input></paper-input>
-    <!-- UPLOAD -->
-    <paper-button>CANCEL</paper-button>
-    <paper-button>CREATE</paper-button>
+    <paper-dialog-scrollable id="tempScroll">
+    <paper-input id="newTemplateName" label="Name:" placeholder="example-template"></paper-input>
+    <paper-input id="newTemplateDescription" label="Description:" placeholder="Example Template"></paper-input>
+    <paper-input id="newTemplateDomain" label="Domain:" placeholder="ev.ge.com"></paper-input>
+    <paper-input id="newTemplateSubject" label="Subject:" placeholder="Report"></paper-input>
+    <px-file-upload id="uploadTemplate" message="Upload Template:" accept="text/html"></px-file-upload>
+    </paper-dialog-scrollable>
+    <div class="buttons">
+    <paper-button dialog-dismiss>CANCEL</paper-button>
+    <paper-button on-tap="sendTemplate">CREATE</paper-button>
+      </div>
   </paper-dialog>
 
   <paper-dialog id="createMatcher">
-
 
   </paper-dialog>
 
@@ -110,6 +114,7 @@
 
   <px-card>
   <px-card header-text="Manage Templates, Matchers, and Recipients" class="font-type">
+    <div class="flex__item flex__item--msfix"><content></content></div>
     <div id="entire-page" class="flex flex--row flex--justify flex--stretch font-type">
         <div id="left-view" style="flex: 1 1 auto; width: 100%;">
           <div id="choose-template" style="flex: 1 1 auto; width: 100%; text-align: center;">
@@ -267,21 +272,32 @@
     chosenTemplate: function(e) {
       // TODO: CLEAR DATA IN MATCHER AND RECIPIENT DISPLAY, UPDATE MATCHERS IN DROPDOWN, AND PARSE AND DISPLAY PARAMETERS
       var self = document.querySelector('edit-templates');
-      var templateLabel = e.detail.value.label;
+      if (e.detail.value) {
+        var templateLabel = e.detail.value.label;
 
-      // Clear data in matcher and recipient display.
-      self.recipients = [];
+        // Clear data in matcher and recipient display.
+        self.recipients = [];
 
-      var template = self.templates.find(function(temp) { return temp.templateUuid === templateLabel; });
-      if (!template.bodyTemplate) {
-        //return error dialog
-        self.$.templateInvalid.open();
-      } else {
-        // Get matchers.
-        self.getMatchers(template.templateUuid);
+        var template = self.templates.find(function(temp) { return temp.templateUuid === templateLabel; });
+        if (!template.bodyTemplate) {
+          //return error dialog
+          self.$.templateInvalid.open();
+        } else {
+          // Get matchers.
+          self.getMatchers(template.templateUuid);
 
-        // Parse and display parameters.
-        self.parameters = self.parseTemplate(template.bodyTemplate);
+          // Parse and display parameters.
+          self.parameters = self.parseTemplate(template.bodyTemplate);
+        }
+      }
+    },
+
+    chosenMatcher: function(e) {
+      var self = document.querySelector('edit-templates');
+      if (e.detail.value) {
+        var matcherLabel = e.detail.value.label;
+        var templateLabel = self.$.pickTemplate.selectedItemLabel;
+        self.getRecipients(templateLabel, matcherLabel);
       }
     },
 
@@ -289,8 +305,45 @@
       this.$.createTemplate.open();
     },
 
-    deleteTemplate: function(e) {
+    sendTemplate: function() {
+      var data = {};
+      data.name = this.$.createTemplate.children.tempScroll.children.scrollable.children.newTemplateName.value;
+      data.domain = this.$.createTemplate.children.tempScroll.children.scrollable.children.newTemplateDomain.value;
+      data.description = this.$.createTemplate.children.tempScroll.children.scrollable.children.newTemplateDescription.value;
+      data.subjectTemplate = this.$.createTemplate.children.tempScroll.children.scrollable.children.newTemplateDomain.value;
+      var upload = this.$.createTemplate.children.tempScroll.children.scrollable.children.uploadTemplate;
 
+      var ajax = this.setAjax("/api/notification/templates", "POST", data);
+      ajax.addEventListener('response', newTemplateSubscription);
+      ajax.generateRequest();
+
+      function newTemplateSubscription(e) {
+        ajax.removeEventListener('response', newTemplateSubscription);
+        var templateUuid = e.detail.response.payload.templateUuid;
+        var url = "/api/notification/templates/" + templateUuid + "/upload";
+        ajax = this.parentElement.setAjax(url, "POST", upload.files[0]);
+        ajax.contentType = "multipart/form-data";
+        ajax.addEventListener('response', newUpload);
+        ajax.generateRequest();
+
+        function newUpload(ev) {
+          this.parentElement.parentElement.$.getTemplates();
+        }
+      }
+
+      this.$.createTemplate.close();
+    },
+
+    deleteTemplate: function(e) {
+      var template = this.$.pickTemplate.selectedItemLabel;
+      var url = "/api/notification/templates/" + template;
+      var ajax = this.setAjax(url, "DELETE");
+      ajax.addEventListener('response', refreshDelete);
+      ajax.generateRequest();
+      function refreshDelete() {
+        ajax.removeEventListener('response', refreshDelete);
+        this.parentElement.getTemplates();
+      }
     }
 
   });
