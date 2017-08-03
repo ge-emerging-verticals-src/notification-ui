@@ -11,6 +11,7 @@
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html" />
 <link rel="import" href="../../bower_components/px-file-upload/px-file-upload.html" />
 <link rel="import" href="../../bower_components/px-card/px-card.html" />
+<link rel="import" href="../../bower_components/paper-button/paper-button.html" />
 
 
 <dom-module id="edit-templates">
@@ -82,12 +83,12 @@
     <paper-input id="newTemplateDescription" label="Description:" placeholder="Example Template"></paper-input>
     <paper-input id="newTemplateDomain" label="Domain:" placeholder="ev.ge.com"></paper-input>
     <paper-input id="newTemplateSubject" label="Subject:" placeholder="Report"></paper-input>
-    <px-file-upload id="uploadTemplate" message="Upload Template:" accept="text/html"></px-file-upload>
+    <px-file-upload id="uploadTemplate" message="Upload Template:"></px-file-upload>
     </paper-dialog-scrollable>
     <div class="buttons">
     <paper-button dialog-dismiss>CANCEL</paper-button>
     <paper-button on-tap="sendTemplate">CREATE</paper-button>
-      </div>
+    </div>
   </paper-dialog>
 
   <paper-dialog id="createMatcher">
@@ -321,10 +322,18 @@
         ajax.removeEventListener('response', newTemplateSubscription);
         var templateUuid = e.detail.response.payload.templateUuid;
         var url = "/api/notification/templates/" + templateUuid + "/upload";
-        ajax = this.parentElement.setAjax(url, "POST", upload.files[0]);
-        ajax.contentType = "multipart/form-data";
-        ajax.addEventListener('response', newUpload);
-        ajax.generateRequest();
+        var body = upload.files[0];
+        body.type = null;
+        console.log(body);
+        var xhr = new XMLHttpRequest();
+        var data = new FormData();
+        data.append("file", body);
+        console.log(data);
+
+        xhr.open("POST", url);
+        xhr.withCredentials = true;
+        // xhr.setRequestHeader('Content-Type','multipart/form-data');
+        //xhr.send(data);
 
         function newUpload(ev) {
           this.parentElement.parentElement.$.getTemplates();
