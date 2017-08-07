@@ -114,17 +114,11 @@
 
   </paper-dialog>
 
-  <!-- <paper-dialog id="editTemplate">
-
-
-  </paper-dialog> -->
-
   <paper-dialog id="templateInvalid">
     <h2>Template Invalid:</h2>
     <p>
       No template has been uploaded.
     </p>
-    <!-- TODO: UPLOAD TEMPLATE -->
   </paper-dialog>
 
   <px-card>
@@ -142,7 +136,7 @@
   </paper-listbox>
   </paper-dropdown-menu>
   <paper-icon-button id="createTemplateButton" icon="add" class="icon-style" style="margin-left: 20px;" on-tap="openNewTemplate"></paper-icon-button>
-  <paper-icon-button id="deleteTemplateButton" icon="delete" class="icon-style" on-tap="deleteTemplate" disabled></paper-icon-button>
+  <paper-icon-button id="deleteTemplateButton" icon="delete" class="icon-style" on-tap="deleteTemplate" disabled="{{enable(selectedTemplate)}}"></paper-icon-button>
   </div>
   <div id="view-parameters" class="flex" style="flex: 1 1 auto; text-align: center; width: 70%;">
     <paper-datatable id="viewParameters" data="{{parameters}}" class="flex" style="width: 70%;">
@@ -161,13 +155,13 @@
                 </template>
         </paper-listbox>
       </paper-dropdown-menu>
-      <paper-icon-button id="createMatcherButton" icon="add" class="icon-style" style="margin-left: 20px;" on-tap="openNewMatcher" disabled></paper-icon-button>
-      <paper-icon-button id="deleteMatcherButton" icon="delete" class="icon-style" on-tap="deleteMatcher" disabled></paper-icon-button>
+      <paper-icon-button id="createMatcherButton" icon="add" class="icon-style" style="margin-left: 20px;" on-tap="openNewMatcher" disabled="{{enable(selectedTemplate)}}"></paper-icon-button>
+      <paper-icon-button id="deleteMatcherButton" icon="delete" class="icon-style" on-tap="deleteMatcher" disabled="{{enable(selectedMatcher)}}"></paper-icon-button>
     </div>
     <div id="tables-icon-group" class="flex flex--col">
-      <div id="table-icons" style="margin-top: 30px; text-align: right; width: 75%; margin-bottom: -45px;">
-        <paper-icon-button id="createRecipientButton" icon="add" class="icon-style" on-tap="openRecipient" disabled></paper-icon-button>
-        <paper-icon-button id="deleteRecipientButton" icon="delete" class="icon-style" on-tap="deleteRecipients" disabled></paper-icon-button>
+      <div id="table-icons" style="display: inline-table; margin-left: 90px;">
+        <paper-icon-button id="createRecipientButton" icon="add" class="icon-style" on-tap="openRecipient" disabled="{{enable(selectedMatcher)}}"></paper-icon-button>
+        <paper-icon-button id="deleteRecipientButton" icon="delete" class="icon-style" on-tap="deleteRecipients" disabled="{{enable(selectedRecipients)}}"></paper-icon-button>
       </div>
 
       <div id="view-recipients" style="flex: 1 1 auto; text-align: center; width: 70%;" class="flex">
@@ -191,35 +185,64 @@
         type: Array,
         value: function() {
           return [];
-        }
+        },
+        notify: true
       },
 
       parameters: {
         type: Array,
         value: function() {
           return [];
-        }
+        },
+        notify: true
       },
 
       matchers: {
         type: Array,
         value: function() {
           return [];
-        }
+        },
+        notify: true
       },
 
       recipients: {
         type: Array,
         value: function() {
           return [];
-        }
+        },
+        notify: true
+      },
+
+      selectedTemplate: {
+        type: Object,
+        notify: true
+      },
+
+      selectedMatcher: {
+        type: Object,
+        notify: true
+      },
+
+      selectedRecipients: {
+        type: Array,
+        notify: true
       }
+
     },
 
+    /*
+      On load: get templates, establish event listeners, programmatically fix elements.
+    */
     ready: function() {
       this.getTemplates();
       this.$.pickTemplate.addEventListener('selected-item-changed', this.chosenTemplate);
       this.$.pickMatcher.addEventListener('selected-item-changed', this.chosenMatcher);
+      this.$.viewRecipients.addEventListener('row-tap', this.recipientsSelected);
+      this.selectedTemplate = this.$.pickTemplate.selectedItemLabel;
+      this.selectedMatcher = this.$.pickMatcher.selectedItemLabel;
+      this.selectedRecipients = this.$.viewRecipients.selectedItems;
+
+      //fixIcons(this.$.viewRecipients);
       fixTable(this.$.viewParameters);
       fixTable(this.$.viewRecipients);
 
@@ -231,8 +254,25 @@
           fixTable(table);
         }
       }
+
+      function fixIcons(table) {
+        if (table.querySelector('#container').querySelector('table').querySelector('thead').querySelector('tr').querySelectorAll('th')[1] && document.querySelector('#table-icons')) {
+          var icons = document.querySelector('#table-icons');
+          table.querySelector('#container').querySelector('table').querySelector('thead').querySelector('tr').querySelectorAll('th')[1].appendChild(icons);
+        } else {
+          fixIcons(table);
+        }
+      }
     },
 
+    enable: function(content) {
+      console.log(content, content ? false : true);
+      return content ? false : true;
+    },
+
+    /*
+      Set ajax request imformation.
+    */
     setAjax: function(url, method, body) {
       var ajax = this.$.ajax;
       ajax.url = url;
@@ -241,6 +281,9 @@
       return ajax;
     },
 
+    /*
+      Grab templates.
+    */
     getTemplates: function() {
       var ajax = this.setAjax("/api/notification/templates", "GET");
       ajax.addEventListener('response', templateResponse);
@@ -252,6 +295,9 @@
       }
     },
 
+    /*
+      Grab matchers.
+    */
     getMatchers: function(templateUuid) {
       let url = "/api/notification/templates/" + templateUuid + "/matchers";
       var ajax = this.setAjax(url, "GET");
@@ -264,6 +310,9 @@
       }
     },
 
+    /*
+      Grab recipients.
+    */
     getRecipients: function(templateUuid, matcherUuid) {
       let url = "/api/notification/templates/" + templateUuid + "/matchers/" + matcherUuid + "/recipients";
       var ajax = this.setAjax(url, "GET");
@@ -281,6 +330,9 @@
       }
     },
 
+    /*
+      Given the template as a string, parse it into parameter body.
+    */
     parseTemplate: function(templateBody) {
 
       var regex = /{{.*}}/g;
@@ -294,6 +346,9 @@
       });
     },
 
+    /*
+      Event reaction for selecting a template.
+    */
     chosenTemplate: function(e) {
       // TODO: CLEAR DATA IN MATCHER AND RECIPIENT DISPLAY, UPDATE MATCHERS IN DROPDOWN, AND PARSE AND DISPLAY PARAMETERS
       var self = document.querySelector('edit-templates');
@@ -315,29 +370,32 @@
 
           // Parse and display parameters.
           self.parameters = self.parseTemplate(template.bodyTemplate);
-
-          // Enabled buttons.
-          document.querySelector('#deleteTemplateButton').disabled = false;
-          document.querySelector('#createMatcherButton').disabled = false;
         }
       }
     },
 
+    /*
+      Event reaction for selecting a template.
+    */
     chosenMatcher: function(e) {
       var self = document.querySelector('edit-templates');
       if (e.detail.value) {
         var matcherLabel = e.detail.value.label;
         var templateLabel = self.$.pickTemplate.selectedItemLabel;
         self.getRecipients(templateLabel, matcherLabel);
-        document.querySelector('#deleteMatcherButton').disabled = false;
-        document.querySelector('#createRecipientButton').disabled = false;
       }
     },
 
+    /*
+      Upon choosing to create new template, open input dialog.
+    */
     openNewTemplate: function(e) {
       this.$.createTemplate.open();
     },
 
+    /*
+      Upon completion of input, post new template.
+    */
     sendTemplate: function() {
       var data = {};
       data.name = this.$.createTemplate.children.tempScroll.children.scrollable.children.newTemplateName.value;
@@ -352,24 +410,36 @@
 
       function newTemplateSubscription(e) {
         ajax.removeEventListener('response', newTemplateSubscription);
+        document.querySelector('#newTemplateName').value = "";
+        document.querySelector('#newTemplateDomain').value = "";
+        document.querySelector('#newTemplateDescription').value = "";
+        document.querySelector('#newTemplateSubject').value = "";
+
         var templateUuid = e.detail.response.payload.templateUuid;
         var url = "/api/notification/templates/" + templateUuid + "/upload";
         var body = upload.files[0];
+        var reader = new FileReader();
         var xhr = new XMLHttpRequest();
-        var data = new FormData();
-        data.append("file", body);
+        var file = new FormData();
 
         xhr.open("POST", url);
         xhr.withCredentials = true;
         xhr.setRequestHeader('Content-Type', 'multipart/form-data');
-        xhr.send(data);
 
+        reader.onload = function(evt) {
+          file.append("file", body);
+          xhr.send(file);
+        }
+        reader.readAsDataURL(body);
         this.parentElement.getTemplates();
       }
 
       this.$.createTemplate.close();
     },
 
+    /*
+      Delete selected template.
+    */
     deleteTemplate: function(e) {
       var template = this.$.pickTemplate.selectedItemLabel;
       var url = "/api/notification/templates/" + template;
@@ -383,6 +453,9 @@
       }
     },
 
+    /*
+      Upon selection to create a new matcher, open input dialog.
+    */
     openNewMatcher: function(e) {
       if (this.$.pickTemplate.selectedItemLabel) {
         this.$.createMatcher.open();
@@ -391,6 +464,9 @@
       }
     },
 
+    /*
+      Upon filling out info, post new matcher.
+    */
     sendMatcher: function(e) {
       var self = document.querySelector('edit-templates');
       var template = this.$.pickTemplate.selectedItemLabel;
@@ -405,9 +481,13 @@
         ajax.removeEventListener('response', createdMatcher);
         self.$.createMatcher.close();
         self.getMatchers(template);
+        document.querySelector('#newMatcher').value = "";
       }
     },
 
+    /*
+      Delete selected matcher.
+    */
     deleteMatcher: function(e) {
       var template = this.$.pickTemplate.selectedItemLabel;
       var matcher = this.$.pickMatcher.selectedItemLabel;
@@ -422,10 +502,16 @@
       }
     },
 
+    /*
+      Open to dialog to create a recipient.
+    */
     openRecipient: function(e) {
       document.querySelector('#createRecipient').open();
     },
 
+    /*
+      Delete selected recipients.
+    */
     deleteRecipients: function(e) {
       var self = document.querySelector('edit-templates');
       var selected = document.querySelector('#viewRecipients').selectedItems;
@@ -443,10 +529,17 @@
       }
 
       function deletedRecipient(e) {
+        ajax.removeEventListener('response', deletedRecipient);
         self.getRecipients(template, matcher);
+        var table = document.querySelector('#viewRecipients');
+        table.reload();
+        table.deselectAll();
       }
     },
 
+    /*
+      Post recipient upon filling out info.
+    */
     sendRecipient: function(e) {
       var self = document.querySelector('edit-templates');
       var template = this.$.pickTemplate.selectedItemLabel;
@@ -454,15 +547,17 @@
       var url = "/api/notification/templates/" + template + "/matchers/" + matcher + "/recipients";
       var body = {};
       var dummy = [];
-      body.recipients = dummy.push(document.querySelector('#newRecipient').value);
+      dummy.push(document.querySelector('#newRecipient').value);
+      body.recipients = dummy;
       var ajax = self.setAjax(url, "POST", body);
       ajax.addEventListener('response', createdRecipient);
       ajax.generateRequest();
 
-      function createdMatcher(e) {
+      function createdRecipient(e) {
         ajax.removeEventListener('response', createdRecipient);
         self.$.createRecipient.close();
         self.getRecipients(template, matcher);
+        document.querySelector('#newRecipient').value = "";
       }
     }
   });

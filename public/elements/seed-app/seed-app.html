@@ -137,6 +137,16 @@
          element-href="/elements/views/edit-templates.html">
        </px-view>
 
+       <app-route
+         route="[[_route]]"
+         pattern="/test-webhooks"
+         active="{{_testwebhooksinfoActive}}">
+       </app-route>
+       <px-view id="webhooksPxView"
+         active="[[_testwebhooksinfoActive]]"
+         element-href="/elements/views/test-webhooks.html">
+       </px-view>
+
         <!-- about route and view -->
         <!-- <app-route
           route="[[_route]]"
@@ -196,32 +206,25 @@
 
                // tenant info page
               {
-                "label": "Tenants",
+                "label": "Tenant Display",
                 "path": "/tenant-info",
                 "icon": "fa-user"
               },
-              // {
-              //   "label":"Tenant Configuration",
-              //   "path": "/tenant-configuration",
-              //   "icon": "fa-info-circle"
-              // },
-              // end tenant info
 
-              // event info page
               {
-                "label": "Event Display",
-                "path": "/events",
-                "icon": "fa-calendar"
+                "label":"Webhook Tester",
+                "path": "/test-webhooks",
+                "icon": "fa-refresh"
               },
 
               {
-                "label": "Configurations",
+                "label": "Configuration Set-Up",
                 "path": "/configurations-manager",
                 "icon": "fa-server"
               },
 
               {
-                "label": "Email Manager",
+                "label": "Send Emails",
                 "path": "/email",
                 "icon": "fa-envelope"
               },
@@ -230,6 +233,13 @@
                 "label": "Template Manager",
                 "path": "/templates",
                 "icon": "fa-info-circle"
+              },
+
+              // event info page
+              {
+                "label": "Event Display",
+                "path": "/events",
+                "icon": "fa-calendar"
               }
             ];
           }

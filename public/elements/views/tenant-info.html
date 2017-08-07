@@ -9,10 +9,9 @@
 <dom-module id="tenant-info">
   <template>
     <px-card>
+    <px-card>
       <format-notification-response id="formatNotification"></format-notification-response>
     </px-card>
-    <px-card>
-    <configure-tenants></configure-tenants>
   </px-card>
 
       <!-- Choose one of these iron-ajax elements to load data from the source of your choice. -->
@@ -38,14 +37,6 @@
     Polymer({
       is: 'tenant-info',
       properties: {
-
-      },
-
-      ready: function() {
-        this.addEventListener('refresh-data', function(event) {
-          event.stopPropagation();
-          this.$.formatNotification.newData();
-        });
       }
 
     });
