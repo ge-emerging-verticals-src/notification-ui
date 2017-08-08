@@ -136,7 +136,7 @@
   </paper-listbox>
   </paper-dropdown-menu>
   <paper-icon-button id="createTemplateButton" icon="add" class="icon-style" style="margin-left: 20px;" on-tap="openNewTemplate"></paper-icon-button>
-  <paper-icon-button id="deleteTemplateButton" icon="delete" class="icon-style" on-tap="deleteTemplate" disabled="{{enable(selectedTemplate)}}"></paper-icon-button>
+  <paper-icon-button id="deleteTemplateButton" icon="delete" class="icon-style" on-tap="deleteTemplate" disabled="{{enable('deleteTemplateButton', selectedTemplate)}}"></paper-icon-button>
   </div>
   <div id="view-parameters" class="flex" style="flex: 1 1 auto; text-align: center; width: 70%;">
     <paper-datatable id="viewParameters" data="{{parameters}}" class="flex" style="width: 70%;">
@@ -155,16 +155,16 @@
                 </template>
         </paper-listbox>
       </paper-dropdown-menu>
-      <paper-icon-button id="createMatcherButton" icon="add" class="icon-style" style="margin-left: 20px;" on-tap="openNewMatcher" disabled="{{enable(selectedTemplate)}}"></paper-icon-button>
-      <paper-icon-button id="deleteMatcherButton" icon="delete" class="icon-style" on-tap="deleteMatcher" disabled="{{enable(selectedMatcher)}}"></paper-icon-button>
+      <paper-icon-button id="createMatcherButton" icon="add" class="icon-style" style="margin-left: 20px;" on-tap="openNewMatcher" disabled="{{enable('createMatcherButton', selectedTemplate)}}"></paper-icon-button>
+      <paper-icon-button id="deleteMatcherButton" icon="delete" class="icon-style" on-tap="deleteMatcher" disabled="{{enable('deleteMatcherButton', selectedMatcher)}}"></paper-icon-button>
     </div>
     <div id="tables-icon-group" class="flex flex--col">
-      <div id="table-icons" style="display: inline-table; margin-left: 90px;">
-        <paper-icon-button id="createRecipientButton" icon="add" class="icon-style" on-tap="openRecipient" disabled="{{enable(selectedMatcher)}}"></paper-icon-button>
-        <paper-icon-button id="deleteRecipientButton" icon="delete" class="icon-style" on-tap="deleteRecipients" disabled="{{enable(selectedRecipients)}}"></paper-icon-button>
+      <div id="table-icons" style="display: none; margin-left: 90px;">
+        <paper-icon-button id="createRecipientButton" icon="add" class="icon-style" on-tap="openRecipient" disabled="{{enable('createRecipientButton', selectedMatcher)}}"></paper-icon-button>
+        <paper-icon-button id="deleteRecipientButton" icon="delete" class="icon-style" on-tap="deleteRecipients" disabled="{{enable('deleteRecipientButton', selectedRecipients)}}"></paper-icon-button>
       </div>
 
-      <div id="view-recipients" style="flex: 1 1 auto; text-align: center; width: 70%;" class="flex">
+      <div id="view-recipients" style="flex: 1 1 auto; text-align: center; width: 70%; margin-top: 10px;" class="flex">
         <paper-datatable id="viewRecipients" class="flex" data="{{recipients}}" style="width: 70%;" multi-selection selectable>
           <paper-datatable-column header="Recipients" property="recipient"></paper-datatable-column>
         </paper-datatable>
@@ -215,17 +215,20 @@
 
       selectedTemplate: {
         type: Object,
-        notify: true
+        notify: true,
+        value: {}
       },
 
       selectedMatcher: {
         type: Object,
-        notify: true
+        notify: true,
+        value: {}
       },
 
       selectedRecipients: {
         type: Array,
-        notify: true
+        notify: true,
+        value: []
       }
 
     },
@@ -237,36 +240,52 @@
       this.getTemplates();
       this.$.pickTemplate.addEventListener('selected-item-changed', this.chosenTemplate);
       this.$.pickMatcher.addEventListener('selected-item-changed', this.chosenMatcher);
-      this.$.viewRecipients.addEventListener('row-tap', this.recipientsSelected);
+      this.$.viewRecipients.addEventListener('selection-changed', this.recipientsSelected);
+      this.$.viewRecipients.addEventListener('data-changed', this.fixIcons);
+      this.fixTable(this.$.viewParameters);
+      this.fixTable(this.$.viewRecipients);
       this.selectedTemplate = this.$.pickTemplate.selectedItemLabel;
       this.selectedMatcher = this.$.pickMatcher.selectedItemLabel;
       this.selectedRecipients = this.$.viewRecipients.selectedItems;
+    },
 
-      //fixIcons(this.$.viewRecipients);
-      fixTable(this.$.viewParameters);
-      fixTable(this.$.viewRecipients);
+    // attached: function() {
+    //   this.fixIcons(this.$.viewRecipients, this.$['table-icons']);
+    // },
 
-      function fixTable(table) {
+    fixTable: function(table) {
         if (table.querySelector('#container')) {
           table.querySelector('#container').style.width = 100 + '%';
         } else {
           fixTable(table);
         }
-      }
+    },
 
-      function fixIcons(table) {
-        if (table.querySelector('#container').querySelector('table').querySelector('thead').querySelector('tr').querySelectorAll('th')[1] && document.querySelector('#table-icons')) {
-          var icons = document.querySelector('#table-icons');
-          table.querySelector('#container').querySelector('table').querySelector('thead').querySelector('tr').querySelectorAll('th')[1].appendChild(icons);
-        } else {
-          fixIcons(table);
+    fixIcons: function(e) {
+      this.parentElement.removeEventListener('data-changed', this.parentElement.fixIcons);
+      var icons = document.querySelector('#table-icons');
+      var table = this.parentElement.querySelector('#viewRecipients');
+      var column = table.querySelector('th.column');
+      var start = Date.now();
+      while (!column) {
+        column = table.querySelector('th.column');
+        if (Date.now() - start >= 5000) {
+          break;
         }
+      }
+      if (column) {
+        column.appendChild(icons);
+        icons.style.display = 'inline-table';
+      }
+      else {
+        console.log('Failed to find th.column');
       }
     },
 
-    enable: function(content) {
-      console.log(content, content ? false : true);
-      return content ? false : true;
+    enable: function(caller, content) {
+      let isArray = content.length ? true : false;
+      let array = isArray ? content : Object.keys(content);
+      return array.length === 0 ? true : false;
     },
 
     /*
@@ -353,6 +372,7 @@
       var self = document.querySelector('edit-templates');
       if (e.detail.value) {
         var templateLabel = e.detail.value.label;
+        self.selectedTemplate = templateLabel;
 
         // Clear data in matcher and recipient display.
         self.recipients = [];
@@ -381,6 +401,7 @@
       if (e.detail.value) {
         var matcherLabel = e.detail.value.label;
         var templateLabel = self.$.pickTemplate.selectedItemLabel;
+        self.selectedMatcher = matcherLabel;
         self.getRecipients(templateLabel, matcherLabel);
       }
     },
@@ -534,6 +555,12 @@
         table.reload();
         table.deselectAll();
       }
+    },
+
+    recipientsSelected: function(e) {
+      var self = document.querySelector('edit-templates');
+      console.log(self.$.viewRecipients.selectedItems);
+      self.selectedRecipients = self.$.viewRecipients.selectedItems;
     },
 
     /*
