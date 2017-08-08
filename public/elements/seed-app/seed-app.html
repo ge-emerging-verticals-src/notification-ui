@@ -198,11 +198,11 @@
           type: Array,
           value: function() {
             return [
-              {
-                "label": "Home",
-                "path": "/rmd",
-                "icon": "fa-home"
-              },
+              // {
+              //   "label": "Home",
+              //   "path": "/rmd",
+              //   "icon": "fa-home"
+              // },
 
                // tenant info page
               {
@@ -280,13 +280,13 @@
         // set default route to /rmd
         var l = window.location;
         if((l.hash === "#/" || l.hash === "") && l.pathname === "/") {
-          l.hash = "/rmd";
+          l.hash = "/tenant-info";
         }
       },
 
       _routeChanged: function(newRoute) {
         //console.log('new route:', newRoute);
-        if (newRoute.path !== '/rmd') {
+        if (newRoute.path !== '/tenant-info') {
           var tsChart = document.querySelector('rmd-view timeseries-chart');
           if (tsChart) {
             tsChart.closeWebSocket();
