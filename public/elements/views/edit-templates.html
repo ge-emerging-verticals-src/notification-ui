@@ -380,17 +380,16 @@
         var template = self.templates.find(function(temp) {
           return temp.templateUuid === templateLabel;
         });
-        if (!template.bodyTemplate) {
+        // if (!template.bodyTemplate) {
           //return error dialog
-          self.$.templateInvalid.open();
-        } else {
+          //self.$.templateInvalid.open();
+        // } else {
           // Get matchers.
           self.getMatchers(template.templateUuid);
 
           // Parse and display parameters.
           self.parameters = self.parseTemplate(template.bodyTemplate);
         }
-      }
     },
 
     /*
